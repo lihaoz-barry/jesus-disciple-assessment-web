@@ -1,0 +1,420 @@
+{
+  "id": "jesus_disciple_profile_v1",
+  "name_en": "Jesus Disciple Profile Assessment",
+  "name_zh": "耶稣门徒生命自评量表",
+  "scale": {
+    "min_score": 1,
+    "max_score": 5,
+    "labels": [
+      { "value": 1, "label_en": "Never", "label_zh": "从不" },
+      { "value": 2, "label_en": "Seldom", "label_zh": "偶尔" },
+      { "value": 3, "label_en": "Occasionally", "label_zh": "有时" },
+      { "value": 4, "label_en": "Frequent", "label_zh": "经常" },
+      { "value": 5, "label_en": "Always", "label_zh": "总是" }
+    ]
+  },
+  "groups": [
+    {
+      "id": "being",
+      "name_en": "Five Behaviors Related to Being",
+      "name_zh": "五个与“生命状态”有关的行为"
+    },
+    {
+      "id": "doing",
+      "name_en": "Five Behaviors Related to Doing",
+      "name_zh": "五个与“行为行动”有关的行为"
+    }
+  ],
+  "sections": [
+    {
+      "id": "being_identity",
+      "group_id": "being",
+      "order_index": 1,
+      "title_en": "Identity: Grounded in God's grace and forgiveness",
+      "title_zh": "身份：扎根在神的恩典与赦免中",
+      "items": [
+        {
+          "id": "being_identity_1",
+          "order_index": 1,
+          "text_en": "In the deepest place of my life, I feel God's love and acceptance.",
+          "text_zh": "在我生命最深处，我真实感受到神的爱与接纳。"
+        },
+        {
+          "id": "being_identity_2",
+          "order_index": 2,
+          "text_en": "I trust God without pretense and often share everything about myself with God.",
+          "text_zh": "我在神面前没有伪装，常常向祂倾吐自己的一切。"
+        },
+        {
+          "id": "being_identity_3",
+          "order_index": 3,
+          "text_en": "I often feel secure in the Lord and embrace Him as Father.",
+          "text_zh": "我常常在主里感到安稳，并以祂为我的天父。"
+        },
+        {
+          "id": "being_identity_4",
+          "order_index": 4,
+          "text_en": "I am precious and significant in God's eyes because of His unconditional love and forgiveness.",
+          "text_zh": "因着神无条件的爱与赦免，我知道自己在祂眼中宝贵又重要。"
+        },
+        {
+          "id": "being_identity_5",
+          "order_index": 5,
+          "text_en": "I often experience God's love and healing of any crippling hurts, habits, or hungering.",
+          "text_zh": "我常经历神的爱与医治，修复我内在的伤痛、捆绑和渴求。"
+        }
+      ]
+    },
+    {
+      "id": "being_holiness",
+      "group_id": "being",
+      "order_index": 2,
+      "title_en": "Holiness: Cultivating Christian character",
+      "title_zh": "圣洁：培养基督样式的品格",
+      "items": [
+        {
+          "id": "being_holiness_1",
+          "order_index": 1,
+          "text_en": "I often repent and make reconciliation with God and people.",
+          "text_zh": "我常常在神面前悔改，并主动与人和好。"
+        },
+        {
+          "id": "being_holiness_2",
+          "order_index": 2,
+          "text_en": "I consecrate myself daily by making deliberate choices to pursue a path that glorifies God.",
+          "text_zh": "我每天有意识地做选择，使自己分别为圣，行在荣耀神的道路上。"
+        },
+        {
+          "id": "being_holiness_3",
+          "order_index": 3,
+          "text_en": "I purposefully cultivate and exhibit the fruit of the Holy Spirit.",
+          "text_zh": "我刻意培养并活出圣灵的果子。"
+        },
+        {
+          "id": "being_holiness_4",
+          "order_index": 4,
+          "text_en": "By God's grace, I dedicate myself to rooting out the impurity of my life.",
+          "text_zh": "靠着神的恩典，我致力于除去生命中的各种不洁。"
+        },
+        {
+          "id": "being_holiness_5",
+          "order_index": 5,
+          "text_en": "I often examine my behaviors and words lest I sin against God.",
+          "text_zh": "我常常省察自己的行为和言语，免得得罪神。"
+        }
+      ]
+    },
+    {
+      "id": "being_habit",
+      "group_id": "being",
+      "order_index": 3,
+      "title_en": "Habit: Develop a rhythm for life to cultivate intimacy with Christ",
+      "title_zh": "习惯：建立生命节奏，培养与基督的亲密关系",
+      "items": [
+        {
+          "id": "being_habit_1",
+          "order_index": 1,
+          "text_en": "I practice a regular quiet time with God by prayer, reading Scriptures, meditation, etc.",
+          "text_zh": "我有规律地与神安静相处，通过祷告、读经、默想等亲近祂。"
+        },
+        {
+          "id": "being_habit_2",
+          "order_index": 2,
+          "text_en": "I have developed particular practices that lead me to feel close to God.",
+          "text_zh": "我养成了一些属灵操练，使我更亲近神。"
+        },
+        {
+          "id": "being_habit_3",
+          "order_index": 3,
+          "text_en": "I often leave a margin in life so that God can work on me and renew my life.",
+          "text_zh": "我常在生活中预留空间，让神作工、更新我的生命。"
+        },
+        {
+          "id": "being_habit_4",
+          "order_index": 4,
+          "text_en": "I make plans for weekly, monthly, and annual sabbaths to \"restore my soul.\"",
+          "text_zh": "我会规划每周、每月、每年的“安息时间”，使我的心灵得以恢复。"
+        },
+        {
+          "id": "being_habit_5",
+          "order_index": 5,
+          "text_en": "I live an unhurried lifestyle by saying \"no\" to many things that may hinder my time with God.",
+          "text_zh": "我学习过一种不匆忙的生活方式，对那些妨碍我与神相处的事说“不”。"
+        }
+      ]
+    },
+    {
+      "id": "being_posture",
+      "group_id": "being",
+      "order_index": 4,
+      "title_en": "Posture: Holding a posture of faithfulness, humility, and surrender",
+      "title_zh": "姿态：持守忠心、谦卑与顺服的姿态",
+      "items": [
+        {
+          "id": "being_posture_1",
+          "order_index": 1,
+          "text_en": "I am consistent with what I believe about God's teaching and what I do.",
+          "text_zh": "我信仰中所认识的神的教导，与我实际的行为基本一致。"
+        },
+        {
+          "id": "being_posture_2",
+          "order_index": 2,
+          "text_en": "I usually can fulfill the ministry the Lord assigned me to accomplish.",
+          "text_zh": "我通常能完成主交托给我的服事。"
+        },
+        {
+          "id": "being_posture_3",
+          "order_index": 3,
+          "text_en": "I habitually put others first before myself.",
+          "text_zh": "我习惯把别人的需要放在自己之前。"
+        },
+        {
+          "id": "being_posture_4",
+          "order_index": 4,
+          "text_en": "I seek constructive criticism from fellow believers.",
+          "text_zh": "我愿意寻求并接纳弟兄姊妹给予我的建设性批评。"
+        },
+        {
+          "id": "being_posture_5",
+          "order_index": 5,
+          "text_en": "I learn to let go of my will and let God control.",
+          "text_zh": "我学习放下自己的意思，让神掌权。"
+        }
+      ]
+    },
+    {
+      "id": "being_calling",
+      "group_id": "being",
+      "order_index": 5,
+      "title_en": "Calling: Pay attention to God's dynamic call",
+      "title_zh": "呼召：留心神不断的呼召",
+      "items": [
+        {
+          "id": "being_calling_1",
+          "order_index": 1,
+          "text_en": "I always have a sense of calling from the Lord.",
+          "text_zh": "我一直有从主而来的呼召感。"
+        },
+        {
+          "id": "being_calling_2",
+          "order_index": 2,
+          "text_en": "I am aware of my developmental stages and know where I am heading.",
+          "text_zh": "我留心自己生命成长的阶段，并大致知道自己要往哪里去。"
+        },
+        {
+          "id": "being_calling_3",
+          "order_index": 3,
+          "text_en": "I can see people, events, and circumstances from a sovereignty perspective.",
+          "text_zh": "我能从神主权的角度来看待人、事件和环境。"
+        },
+        {
+          "id": "being_calling_4",
+          "order_index": 4,
+          "text_en": "I habitually seek God's will for my life through searching and discerning effort.",
+          "text_zh": "我习惯藉着查考、分辨，持续寻求神在我生命中的旨意。"
+        },
+        {
+          "id": "being_calling_5",
+          "order_index": 5,
+          "text_en": "I am attentive to the voice of the Holy Spirit.",
+          "text_zh": "我留心圣灵的声音。"
+        }
+      ]
+    },
+    {
+      "id": "doing_witness",
+      "group_id": "doing",
+      "order_index": 6,
+      "title_en": "Witness: Glorify God by sharing Good News and showing good deeds",
+      "title_zh": "见证：藉着分享福音与善行荣耀神",
+      "items": [
+        {
+          "id": "doing_witness_1",
+          "order_index": 1,
+          "text_en": "I am prepared to share my testimony.",
+          "text_zh": "我预备好与人分享自己的见证。"
+        },
+        {
+          "id": "doing_witness_2",
+          "order_index": 2,
+          "text_en": "I regularly pray for non-believers I know.",
+          "text_zh": "我经常为我认识的未信主的人祷告。"
+        },
+        {
+          "id": "doing_witness_3",
+          "order_index": 3,
+          "text_en": "I live a life of \"show and tell\" (showing my good deeds and sharing the Good News).",
+          "text_zh": "我以生活见证与口传福音相结合，活出“让人看见也听见”的生命。"
+        },
+        {
+          "id": "doing_witness_4",
+          "order_index": 4,
+          "text_en": "I intentionally make friends with my neighbors and fellow employees.",
+          "text_zh": "我有意识地与邻居和同事建立友谊。"
+        },
+        {
+          "id": "doing_witness_5",
+          "order_index": 5,
+          "text_en": "I regularly invite people to \"come and see\" Jesus Christ through various church functions.",
+          "text_zh": "我常常邀请人参加教会各样聚会，使他们能“来看看”耶稣基督。"
+        }
+      ]
+    },
+    {
+      "id": "doing_stewarding",
+      "group_id": "doing",
+      "order_index": 7,
+      "title_en": "Stewarding: Discovering gifts, capabilities, and passion",
+      "title_zh": "管家职分：发现恩赐、能力与热情",
+      "items": [
+        {
+          "id": "doing_stewarding_1",
+          "order_index": 1,
+          "text_en": "I understand my spiritual gifts and use those gifts to serve others.",
+          "text_zh": "我明白自己的属灵恩赐，并用这些恩赐去服事别人。"
+        },
+        {
+          "id": "doing_stewarding_2",
+          "order_index": 2,
+          "text_en": "I have a sound knowledge of my learned skills, natural abilities, and personality.",
+          "text_zh": "我对自己所学的技能、天赋能力和性格有清楚的认识。"
+        },
+        {
+          "id": "doing_stewarding_3",
+          "order_index": 3,
+          "text_en": "I know my passions for serving in the local church or other spheres of life.",
+          "text_zh": "我知道自己在当地教会或其他生活领域中服事的热情所在。"
+        },
+        {
+          "id": "doing_stewarding_4",
+          "order_index": 4,
+          "text_en": "I am good at managing my time, finances, and talents for Christ's kingdom.",
+          "text_zh": "我善于管理自己的时间、金钱和才能，为基督的国度使用。"
+        },
+        {
+          "id": "doing_stewarding_5",
+          "order_index": 5,
+          "text_en": "I regularly contribute time to church ministries with my gifts.",
+          "text_zh": "我经常用自己的恩赐和时间参与教会事工。"
+        }
+      ]
+    },
+    {
+      "id": "doing_role",
+      "group_id": "doing",
+      "order_index": 8,
+      "title_en": "Role: Knowing your unique contribution and role",
+      "title_zh": "角色：认识自己独特的贡献与角色",
+      "items": [
+        {
+          "id": "doing_role_1",
+          "order_index": 1,
+          "text_en": "I am eager to seek responsibilities in the Christian faith community.",
+          "text_zh": "我乐意在基督信仰群体中承担责任。"
+        },
+        {
+          "id": "doing_role_2",
+          "order_index": 2,
+          "text_en": "I know God has sharpened my personality and temperament in a particular way for His purpose.",
+          "text_zh": "我知道神以特别的方式塑造了我的个性和气质，为成就祂的旨意。"
+        },
+        {
+          "id": "doing_role_3",
+          "order_index": 3,
+          "text_en": "I know my unique contribution and effective methods to serve in Christ's kingdom.",
+          "text_zh": "我了解自己独特的贡献，以及如何有效地在基督的国度中服事。"
+        },
+        {
+          "id": "doing_role_4",
+          "order_index": 4,
+          "text_en": "I spend time praying for taking leadership roles to make greater contribution.",
+          "text_zh": "我花时间祷告，预备自己承担领导的角色，以作更大的贡献。"
+        },
+        {
+          "id": "doing_role_5",
+          "order_index": 5,
+          "text_en": "I am willing to take risks instead of staying in complacency regarding my leadership role.",
+          "text_zh": "在带领的角色上，我愿意为主冒险，而不是停留在安逸中。"
+        }
+      ]
+    },
+    {
+      "id": "doing_community",
+      "group_id": "doing",
+      "order_index": 9,
+      "title_en": "Community: Developing authenticity and vulnerability in faith community",
+      "title_zh": "群体：在信仰群体中建立真实与敞开的关系",
+      "items": [
+        {
+          "id": "doing_community_1",
+          "order_index": 1,
+          "text_en": "I have a deep sense of belonging in the Christian faith community.",
+          "text_zh": "我在基督信仰群体中有深深的归属感。"
+        },
+        {
+          "id": "doing_community_2",
+          "order_index": 2,
+          "text_en": "I allow other Christians to hold me accountable for spiritual growth.",
+          "text_zh": "我愿意让其他基督徒在属灵成长上监督、提醒我。"
+        },
+        {
+          "id": "doing_community_3",
+          "order_index": 3,
+          "text_en": "I am intentionally engaged in building Christian community.",
+          "text_zh": "我有意识地投入在建立基督徒团契和社区中。"
+        },
+        {
+          "id": "doing_community_4",
+          "order_index": 4,
+          "text_en": "I have Christian friends to deeply share with each other toward personal growth and maturity.",
+          "text_zh": "我与基督徒朋友彼此深入分享，一同追求成长与成熟。"
+        },
+        {
+          "id": "doing_community_5",
+          "order_index": 5,
+          "text_en": "I often experience authenticity and vulnerability in the group I belong to.",
+          "text_zh": "我常在所属的小组或群体中经历真实与彼此敞开。"
+        }
+      ]
+    },
+    {
+      "id": "doing_empowering",
+      "group_id": "doing",
+      "order_index": 10,
+      "title_en": "Empowering: Helping others discover their potential for spiritual growth",
+      "title_zh": "成全：帮助别人发现属灵成长的潜能",
+      "items": [
+        {
+          "id": "doing_empowering_1",
+          "order_index": 1,
+          "text_en": "I help others discover their ministry gifts and become involved in ministry.",
+          "text_zh": "我帮助别人发现他们的服事恩赐，并鼓励他们参与事工。"
+        },
+        {
+          "id": "doing_empowering_2",
+          "order_index": 2,
+          "text_en": "I provide guidance to help others discover their potential for spiritual growth.",
+          "text_zh": "我提供引导，帮助别人发掘属灵成长的潜力。"
+        },
+        {
+          "id": "doing_empowering_3",
+          "order_index": 3,
+          "text_en": "I offer a biblical perspective when helping others work through struggles and questions.",
+          "text_zh": "当别人经历挣扎与问题时，我会从圣经的角度帮助他们思考。"
+        },
+        {
+          "id": "doing_empowering_4",
+          "order_index": 4,
+          "text_en": "I gain skills needed to effectively nurture others toward Christlikeness and wholeness.",
+          "text_zh": "我刻意学习与操练，使自己能更有效地培育别人，帮助他们更像基督、更完全。"
+        },
+        {
+          "id": "doing_empowering_5",
+          "order_index": 5,
+          "text_en": "I make disciples through teaching, mentoring, coaching, or other forms of relationship.",
+          "text_zh": "我藉着教导、陪伴、辅导等关系，带领人作主的门徒。"
+        }
+      ]
+    }
+  ]
+}
