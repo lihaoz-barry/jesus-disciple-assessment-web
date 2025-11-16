@@ -1,0 +1,73 @@
+{
+  "title": "Jesus Disciple Profile Assessment",
+  "description": "This assessment helps evaluate your spiritual growth and discipleship journey.",
+  "questions": [
+    {
+      "id": 1,
+      "category": "Faith",
+      "text_en": "I regularly spend time in prayer and Bible study",
+      "text_zh": "我定期花时间祷告和学习圣经"
+    },
+    {
+      "id": 2,
+      "category": "Faith",
+      "text_en": "I trust God in difficult circumstances",
+      "text_zh": "我在困难的环境中信靠神"
+    },
+    {
+      "id": 3,
+      "category": "Love",
+      "text_en": "I show compassion and kindness to others",
+      "text_zh": "我向他人展示同情心和善意"
+    },
+    {
+      "id": 4,
+      "category": "Love",
+      "text_en": "I forgive those who have wronged me",
+      "text_zh": "我原谅那些冤枉我的人"
+    },
+    {
+      "id": 5,
+      "category": "Service",
+      "text_en": "I actively serve in my church community",
+      "text_zh": "我积极服务于我的教会社区"
+    },
+    {
+      "id": 6,
+      "category": "Service",
+      "text_en": "I look for opportunities to help others",
+      "text_zh": "我寻找机会帮助他人"
+    },
+    {
+      "id": 7,
+      "category": "Witness",
+      "text_en": "I share my faith with non-believers",
+      "text_zh": "我与非信徒分享我的信仰"
+    },
+    {
+      "id": 8,
+      "category": "Witness",
+      "text_en": "I live my life as an example of Christ's love",
+      "text_zh": "我过着体现基督之爱的生活"
+    },
+    {
+      "id": 9,
+      "category": "Growth",
+      "text_en": "I seek to grow in my understanding of Scripture",
+      "text_zh": "我寻求增长对圣经的理解"
+    },
+    {
+      "id": 10,
+      "category": "Growth",
+      "text_en": "I am open to correction and spiritual guidance",
+      "text_zh": "我愿意接受纠正和属灵引导"
+    }
+  ],
+  "scale": {
+    "1": "Strongly Disagree / 强烈不同意",
+    "2": "Disagree / 不同意",
+    "3": "Neutral / 中立",
+    "4": "Agree / 同意",
+    "5": "Strongly Agree / 强烈同意"
+  }
+}
