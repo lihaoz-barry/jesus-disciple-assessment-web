@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { createClient } from './supabase/client';
 
 export interface UserProfile {
   id: string;
@@ -27,6 +27,7 @@ export interface UserStats {
 // Get user profile
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {
   try {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('user_profiles')
       .select('*')
@@ -51,6 +52,7 @@ export async function updateUserProfile(
   updates: { full_name?: string }
 ): Promise<{ success: boolean; error?: string }> {
   try {
+    const supabase = createClient();
     const { error } = await supabase
       .from('user_profiles')
       .update(updates)
@@ -71,6 +73,8 @@ export async function updateUserProfile(
 // Get user statistics
 export async function getUserStats(userId: string): Promise<UserStats | null> {
   try {
+    const supabase = createClient();
+
     // Get user data from auth
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return null;
@@ -117,6 +121,7 @@ export async function saveAssessmentResult(
   scores: Record<string, number>
 ): Promise<{ success: boolean; error?: string; id?: string }> {
   try {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('assessment_results')
       .insert({
@@ -145,6 +150,7 @@ export async function getAssessmentHistory(
   userId: string
 ): Promise<AssessmentResult[]> {
   try {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('assessment_results')
       .select('*')
@@ -168,6 +174,7 @@ export async function getLatestAssessment(
   userId: string
 ): Promise<AssessmentResult | null> {
   try {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('assessment_results')
       .select('*')
