@@ -3,25 +3,46 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, AlertCircle, Loader2, CheckCircle } from 'lucide-react';
+import { signUp } from '@/lib/auth';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccess(false);
+
     if (password !== confirmPassword) {
-      alert('Passwords do not match! / 密码不匹配!');
+      setError('Passwords do not match! / 密码不匹配!');
       return;
     }
-    // TODO: Implement Supabase registration
-    console.log('Register:', { name, email, password });
-    // Temporary redirect for demo
-    router.push('/dashboard');
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters / 密码至少需要6个字符');
+      return;
+    }
+
+    setLoading(true);
+
+    const result = await signUp(email, password, email);
+
+    if (result.success) {
+      setSuccess(true);
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+    } else {
+      setError(result.error || 'Registration failed. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,20 +56,19 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleRegister} className="space-y-5">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name / 姓名
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              placeholder="John Doe"
-              required
-            />
-          </div>
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm">{error}</span>
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm">Registration successful! Redirecting to login... / 注册成功！正在跳转到登录页...</span>
+            </div>
+          )}
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -62,12 +82,14 @@ export default function RegisterPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholder="your.email@example.com"
               required
+              disabled={loading || success}
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
               Password / 密码
+              <span className="text-xs text-gray-500 ml-2">(minimum 6 characters / 至少6个字符)</span>
             </label>
             <input
               id="password"
@@ -78,6 +100,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               required
               minLength={6}
+              disabled={loading || success}
             />
           </div>
 
@@ -94,14 +117,28 @@ export default function RegisterPage() {
               placeholder="••••••••"
               required
               minLength={6}
+              disabled={loading || success}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+            disabled={loading || success}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
-            Create Account / 注册
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Creating account... / 创建账户中...</span>
+              </>
+            ) : success ? (
+              <>
+                <CheckCircle className="w-5 h-5" />
+                <span>Success! / 成功!</span>
+              </>
+            ) : (
+              <span>Create Account / 注册</span>
+            )}
           </button>
         </form>
 
