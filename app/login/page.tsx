@@ -18,6 +18,13 @@ export default function LoginPage() {
     router.push('/dashboard');
   };
 
+  const handleTestUserLogin = () => {
+    // Backdoor for test user - no credentials required
+    console.log('Test user backdoor login');
+    localStorage.setItem('testUser', 'true');
+    router.push('/dashboard');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
@@ -66,6 +73,26 @@ export default function LoginPage() {
             Sign In / 登录
           </button>
         </form>
+
+        {/* Test User Backdoor */}
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">或 / Or</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleTestUserLogin}
+            className="mt-4 w-full bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-blue-400 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors"
+          >
+            Test User Login / 测试用户登录
+          </button>
+        </div>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
