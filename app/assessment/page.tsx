@@ -130,13 +130,6 @@ export default function AssessmentPage() {
             </div>
           </div>
 
-          {/* Info Banner */}
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              Questions are presented in random order / 题目以随机顺序呈现
-            </p>
-          </div>
-
           {/* Questions */}
           <div className="space-y-8 mb-8">
             {currentPage.map((item, pageIndex) => {
@@ -144,14 +137,9 @@ export default function AssessmentPage() {
               return (
                 <div key={item.id} className="border-b border-gray-200 pb-6 last:border-b-0">
                   <div className="mb-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <p className="text-lg font-medium text-gray-900">
-                        {globalIndex}. {item.text_en}
-                      </p>
-                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded ml-2 whitespace-nowrap">
-                        {item.section_title_en.split(':')[0]}
-                      </span>
-                    </div>
+                    <p className="text-lg font-medium text-gray-900 mb-2">
+                      {globalIndex}. {item.text_en}
+                    </p>
                     <p className="text-gray-600">
                       {item.text_zh}
                     </p>
