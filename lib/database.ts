@@ -99,7 +99,7 @@ export async function getUserStats(userId: string): Promise<UserStats | null> {
       .eq('user_id', userId)
       .order('completed_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     return {
       email: user.email || '',
@@ -181,7 +181,7 @@ export async function getLatestAssessment(
       .eq('user_id', userId)
       .order('completed_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('Error fetching latest assessment:', error);
