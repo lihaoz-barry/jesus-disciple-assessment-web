@@ -90,17 +90,14 @@ export default function LoginPage() {
               placeholder="••••••••"
               required
               disabled={loading}
+              minLength={6}
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 ${
-              loading
-                ? 'bg-gray-400 cursor-not-allowed text-gray-200'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
