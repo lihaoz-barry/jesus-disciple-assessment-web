@@ -1,45 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
 import assessmentData from '@/data/jesus-disciple-assess.json';
+import { shuffleAssessmentItems, groupItemsIntoPages, calculateSectionScores } from '@/lib/assessment-utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { saveAssessmentResult } from '@/lib/database';
 
 export default function AssessmentPage() {
   const router = useRouter();
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  const { user } = useAuth();
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const currentSection = assessmentData.sections[currentSectionIndex];
-  const totalSections = assessmentData.sections.length;
-  const progress = ((currentSectionIndex + 1) / totalSections) * 100;
+  // Shuffle items once on mount and group into pages
+  const { shuffledItems, pages } = useMemo(() => {
+    const shuffled = shuffleAssessmentItems(assessmentData);
+    const grouped = groupItemsIntoPages(shuffled, 5);
+    return { shuffledItems: shuffled, pages: grouped };
+  }, []);
+
+  const totalPages = pages.length;
+  const currentPage = pages[currentPageIndex];
+  const progress = ((currentPageIndex + 1) / totalPages) * 100;
 
   const handleAnswer = (itemId: string, score: number) => {
     setAnswers({ ...answers, [itemId]: score });
   };
 
   const handleNext = () => {
-    if (currentSectionIndex < totalSections - 1) {
-      setCurrentSectionIndex(currentSectionIndex + 1);
+    if (currentPageIndex < totalPages - 1) {
+      setCurrentPageIndex(currentPageIndex + 1);
       window.scrollTo(0, 0);
     }
   };
 
   const handlePrevious = () => {
-    if (currentSectionIndex > 0) {
-      setCurrentSectionIndex(currentSectionIndex - 1);
+    if (currentPageIndex > 0) {
+      setCurrentPageIndex(currentPageIndex - 1);
       window.scrollTo(0, 0);
     }
   };
 
-  const handleSubmit = () => {
-    // TODO: Save to Supabase
-    console.log('Assessment Results:', answers);
-    const totalQuestions = assessmentData.sections.reduce(
-      (sum, section) => sum + section.items.length,
-      0
-    );
+  const handleSubmit = async () => {
+    const totalQuestions = shuffledItems.length;
     const answeredQuestions = Object.keys(answers).length;
 
     if (answeredQuestions < totalQuestions) {
@@ -49,10 +56,45 @@ export default function AssessmentPage() {
       if (!confirmSubmit) return;
     }
 
-    router.push('/results');
+    if (!user) {
+      alert('Please log in to save your results / 请登录以保存结果');
+      router.push('/login');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Calculate section scores
+      const sectionScores = calculateSectionScores(answers, shuffledItems);
+
+      // Convert to simple object for storage
+      const scores: Record<string, number> = {};
+      Object.entries(sectionScores).forEach(([sectionId, data]) => {
+        scores[sectionId] = data.average;
+      });
+
+      // Save to database
+      const result = await saveAssessmentResult(user.id, answers, scores);
+
+      if (result.success) {
+        // Store result ID in sessionStorage to display on results page
+        if (result.id) {
+          sessionStorage.setItem('latestAssessmentId', result.id);
+        }
+        router.push('/results');
+      } else {
+        alert(`Error saving results: ${result.error}\n保存结果时出错: ${result.error}`);
+        setIsSubmitting(false);
+      }
+    } catch (error: any) {
+      console.error('Error submitting assessment:', error);
+      alert(`Error: ${error.message}\n错误: ${error.message}`);
+      setIsSubmitting(false);
+    }
   };
 
-  const allItemsInSectionAnswered = currentSection.items.every(
+  const allItemsInPageAnswered = currentPage.every(
     (item) => answers[item.id] !== undefined
   );
 
@@ -76,7 +118,7 @@ export default function AssessmentPage() {
             {/* Progress Bar */}
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-600 mb-2">
-                <span>Section {currentSectionIndex + 1} of {totalSections}</span>
+                <span>Page {currentPageIndex + 1} of {totalPages}</span>
                 <span>{Math.round(progress)}% Complete</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
@@ -88,58 +130,63 @@ export default function AssessmentPage() {
             </div>
           </div>
 
-          {/* Section Title */}
-          <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              {currentSection.title_en}
-            </h3>
-            <h4 className="text-xl text-gray-700">
-              {currentSection.title_zh}
-            </h4>
+          {/* Info Banner */}
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              Questions are presented in random order / 题目以随机顺序呈现
+            </p>
           </div>
 
           {/* Questions */}
           <div className="space-y-8 mb-8">
-            {currentSection.items.map((item, index) => (
-              <div key={item.id} className="border-b border-gray-200 pb-6 last:border-b-0">
-                <div className="mb-4">
-                  <p className="text-lg font-medium text-gray-900 mb-2">
-                    {index + 1}. {item.text_en}
-                  </p>
-                  <p className="text-gray-600">
-                    {item.text_zh}
-                  </p>
-                </div>
+            {currentPage.map((item, pageIndex) => {
+              const globalIndex = currentPageIndex * 5 + pageIndex + 1;
+              return (
+                <div key={item.id} className="border-b border-gray-200 pb-6 last:border-b-0">
+                  <div className="mb-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <p className="text-lg font-medium text-gray-900">
+                        {globalIndex}. {item.text_en}
+                      </p>
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded ml-2 whitespace-nowrap">
+                        {item.section_title_en.split(':')[0]}
+                      </span>
+                    </div>
+                    <p className="text-gray-600">
+                      {item.text_zh}
+                    </p>
+                  </div>
 
-                {/* Rating Scale */}
-                <div className="flex flex-wrap gap-2">
-                  {assessmentData.scale.labels.map((label) => (
-                    <button
-                      key={label.value}
-                      onClick={() => handleAnswer(item.id, label.value)}
-                      className={`flex-1 min-w-[100px] px-4 py-3 rounded-lg border-2 transition-all ${
-                        answers[item.id] === label.value
-                          ? 'border-blue-600 bg-blue-600 text-white shadow-lg'
-                          : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400'
-                      }`}
-                    >
-                      <div className="font-semibold">{label.value}</div>
-                      <div className="text-xs">{label.label_en}</div>
-                      <div className="text-xs">{label.label_zh}</div>
-                    </button>
-                  ))}
+                  {/* Rating Scale */}
+                  <div className="flex flex-wrap gap-2">
+                    {assessmentData.scale.labels.map((label) => (
+                      <button
+                        key={label.value}
+                        onClick={() => handleAnswer(item.id, label.value)}
+                        className={`flex-1 min-w-[100px] px-4 py-3 rounded-lg border-2 transition-all ${
+                          answers[item.id] === label.value
+                            ? 'border-blue-600 bg-blue-600 text-white shadow-lg'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-blue-400'
+                        }`}
+                      >
+                        <div className="font-semibold">{label.value}</div>
+                        <div className="text-xs">{label.label_en}</div>
+                        <div className="text-xs">{label.label_zh}</div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Navigation Buttons */}
           <div className="flex justify-between items-center pt-6 border-t border-gray-200">
             <button
               onClick={handlePrevious}
-              disabled={currentSectionIndex === 0}
+              disabled={currentPageIndex === 0}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
-                currentSectionIndex === 0
+                currentPageIndex === 0
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
@@ -148,13 +195,18 @@ export default function AssessmentPage() {
               Previous / 上一页
             </button>
 
-            {currentSectionIndex === totalSections - 1 ? (
+            {currentPageIndex === totalPages - 1 ? (
               <button
                 onClick={handleSubmit}
-                className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors"
+                disabled={isSubmitting}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
+                  isSubmitting
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    : 'bg-green-600 hover:bg-green-700 text-white'
+                }`}
               >
                 <Save className="w-5 h-5" />
-                Submit / 提交
+                {isSubmitting ? 'Submitting... / 提交中...' : 'Submit / 提交'}
               </button>
             ) : (
               <button
@@ -167,10 +219,10 @@ export default function AssessmentPage() {
             )}
           </div>
 
-          {/* Section Completion Indicator */}
-          {!allItemsInSectionAnswered && (
+          {/* Page Completion Indicator */}
+          {!allItemsInPageAnswered && (
             <div className="mt-4 text-center text-sm text-amber-600">
-              Please answer all questions in this section / 请回答本节所有问题
+              Please answer all questions on this page / 请回答本页所有问题
             </div>
           )}
         </div>

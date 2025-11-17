@@ -1,24 +1,91 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Download } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Download, Loader2 } from 'lucide-react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import assessmentData from '@/data/jesus-disciple-assess.json';
+import { useAuth } from '@/contexts/AuthContext';
+import { getLatestAssessment } from '@/lib/database';
+import { getSectionMetadata } from '@/lib/assessment-utils';
 
 export default function ResultsPage() {
-  // Sample data - in production, this would come from Supabase
-  const sampleResults = assessmentData.sections.map((section) => ({
+  const router = useRouter();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [assessmentResult, setAssessmentResult] = useState<any>(null);
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    loadLatestResult();
+  }, [user, router]);
+
+  const loadLatestResult = async () => {
+    if (!user) return;
+
+    try {
+      const result = await getLatestAssessment(user.id);
+      setAssessmentResult(result);
+    } catch (error) {
+      console.error('Error loading assessment result:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600">Loading results... / 加载结果中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!assessmentResult || !assessmentResult.scores) {
+    return (
+      <div className="min-h-screen p-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">No Results Found / 未找到结果</h1>
+          <p className="text-gray-600 mb-8">
+            You haven't completed an assessment yet. / 您还没有完成评估。
+          </p>
+          <Link
+            href="/assessment"
+            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold"
+          >
+            Take Assessment / 开始评估
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Get section metadata for labels
+  const sectionMeta = getSectionMetadata(assessmentData);
+
+  // Prepare results data from assessment scores
+  const results = sectionMeta.map((section) => ({
+    id: section.id,
     name: section.title_en.split(':')[0],
     nameChinese: section.title_zh.split(':')[0],
-    score: Math.floor(Math.random() * 2) + 3.5, // Random score between 3.5-5 for demo
+    score: assessmentResult.scores[section.id] || 0,
     maxScore: 5,
+    group_id: section.group_id,
   }));
 
-  const beingScores = sampleResults.slice(0, 5);
-  const doingScores = sampleResults.slice(5, 10);
+  const beingScores = results.filter((r) => r.group_id === 'being');
+  const doingScores = results.filter((r) => r.group_id === 'doing');
 
   const overallAverage = (
-    sampleResults.reduce((sum, item) => sum + item.score, 0) / sampleResults.length
+    results.reduce((sum, item) => sum + item.score, 0) / results.length
   ).toFixed(1);
 
   const beingAverage = (
@@ -29,10 +96,15 @@ export default function ResultsPage() {
     doingScores.reduce((sum, item) => sum + item.score, 0) / doingScores.length
   ).toFixed(1);
 
-  const radarData = sampleResults.map(item => ({
+  const radarData = results.map(item => ({
     area: item.name,
-    score: item.score,
+    score: parseFloat(item.score.toFixed(1)),
+    fullMark: 5,
   }));
+
+  const completedDate = assessmentResult.completed_at
+    ? new Date(assessmentResult.completed_at).toLocaleDateString()
+    : new Date().toLocaleDateString();
 
   return (
     <div className="min-h-screen p-8">
@@ -53,7 +125,7 @@ export default function ResultsPage() {
                   评估结果
                 </h2>
                 <p className="text-gray-600">
-                  Completed on: {new Date().toLocaleDateString()} / 完成时间
+                  Completed on: {completedDate} / 完成时间
                 </p>
               </div>
               <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
@@ -144,8 +216,8 @@ export default function ResultsPage() {
           <div>
             <h3 className="text-2xl font-bold mb-4">Detailed Scores / 详细分数</h3>
             <div className="space-y-4">
-              {sampleResults.map((result, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4">
+              {results.map((result) => (
+                <div key={result.id} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex justify-between items-center mb-2">
                     <div>
                       <h4 className="font-semibold text-lg">{result.name}</h4>
