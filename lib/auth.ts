@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { createClient } from './supabase/client';
 
 export interface AuthResponse {
   success: boolean;
@@ -8,6 +8,7 @@ export interface AuthResponse {
 
 export async function signUp(email: string, password: string, fullName: string): Promise<AuthResponse> {
   try {
+    const supabase = createClient();
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -30,6 +31,7 @@ export async function signUp(email: string, password: string, fullName: string):
 
 export async function signIn(email: string, password: string): Promise<AuthResponse> {
   try {
+    const supabase = createClient();
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -47,6 +49,7 @@ export async function signIn(email: string, password: string): Promise<AuthRespo
 
 export async function signOut(): Promise<AuthResponse> {
   try {
+    const supabase = createClient();
     const { error } = await supabase.auth.signOut();
 
     if (error) {
@@ -61,6 +64,7 @@ export async function signOut(): Promise<AuthResponse> {
 
 export async function getCurrentUser() {
   try {
+    const supabase = createClient();
     const { data: { user }, error } = await supabase.auth.getUser();
 
     if (error) {
@@ -75,6 +79,7 @@ export async function getCurrentUser() {
 
 export async function getSession() {
   try {
+    const supabase = createClient();
     const { data: { session }, error } = await supabase.auth.getSession();
 
     if (error) {
