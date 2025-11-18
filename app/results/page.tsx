@@ -1,38 +1,122 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, AlertCircle } from 'lucide-react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import assessmentData from '@/data/jesus-disciple-assess.json';
+import { useAuth } from '@/contexts/AuthContext';
+import { getLatestAssessment } from '@/lib/database';
+
+interface AssessmentResults {
+  answers: Record<string, number>;
+  scores: Record<string, number>;
+  completed_at: string;
+}
 
 export default function ResultsPage() {
-  // Sample data - in production, this would come from Supabase
-  const sampleResults = assessmentData.sections.map((section) => ({
-    name: section.title_en.split(':')[0],
-    nameChinese: section.title_zh.split(':')[0],
-    score: Math.floor(Math.random() * 2) + 3.5, // Random score between 3.5-5 for demo
-    maxScore: 5,
-  }));
+  const router = useRouter();
+  const { user } = useAuth();
+  const [results, setResults] = useState<AssessmentResults | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const beingScores = sampleResults.slice(0, 5);
-  const doingScores = sampleResults.slice(5, 10);
+  useEffect(() => {
+    async function loadResults() {
+      // First, try to load from sessionStorage (just submitted)
+      const storedResults = sessionStorage.getItem('assessmentResults');
+
+      if (storedResults) {
+        try {
+          const parsedResults = JSON.parse(storedResults);
+          setResults(parsedResults);
+          setLoading(false);
+          return;
+        } catch (error) {
+          console.error('Failed to parse sessionStorage results:', error);
+        }
+      }
+
+      // If no sessionStorage, try to load latest from database
+      if (user) {
+        try {
+          const latestAssessment = await getLatestAssessment(user.id);
+          if (latestAssessment) {
+            setResults({
+              answers: latestAssessment.answers,
+              scores: latestAssessment.scores || {},
+              completed_at: latestAssessment.completed_at
+            });
+          }
+        } catch (error) {
+          console.error('Failed to load from database:', error);
+        }
+      }
+
+      setLoading(false);
+    }
+
+    loadResults();
+  }, [user]);
+
+  // If no results, redirect to assessment
+  useEffect(() => {
+    if (!loading && !results) {
+      router.push('/assessment');
+    }
+  }, [loading, results, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg text-gray-600">Loading results... / 加载结果中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!results) {
+    return null; // Will redirect
+  }
+
+  // Map section IDs to display data
+  const sectionResults = assessmentData.sections.map((section) => {
+    const score = results.scores[section.id] || 0;
+    return {
+      id: section.id,
+      name: section.title_en.split(':')[0].trim(),
+      nameChinese: section.title_zh.split(':')[0].trim(),
+      fullName_en: section.title_en,
+      fullName_zh: section.title_zh,
+      score: score,
+      maxScore: 5,
+      groupId: section.group_id
+    };
+  });
+
+  const beingScores = sectionResults.filter(s => s.groupId === 'being');
+  const doingScores = sectionResults.filter(s => s.groupId === 'doing');
 
   const overallAverage = (
-    sampleResults.reduce((sum, item) => sum + item.score, 0) / sampleResults.length
+    sectionResults.reduce((sum, item) => sum + item.score, 0) / sectionResults.length
   ).toFixed(1);
 
-  const beingAverage = (
-    beingScores.reduce((sum, item) => sum + item.score, 0) / beingScores.length
-  ).toFixed(1);
+  const beingAverage = beingScores.length > 0
+    ? (beingScores.reduce((sum, item) => sum + item.score, 0) / beingScores.length).toFixed(1)
+    : '0.0';
 
-  const doingAverage = (
-    doingScores.reduce((sum, item) => sum + item.score, 0) / doingScores.length
-  ).toFixed(1);
+  const doingAverage = doingScores.length > 0
+    ? (doingScores.reduce((sum, item) => sum + item.score, 0) / doingScores.length).toFixed(1)
+    : '0.0';
 
-  const radarData = sampleResults.map(item => ({
+  const radarData = sectionResults.map(item => ({
     area: item.name,
-    score: item.score,
+    score: Number(item.score.toFixed(1)),
   }));
+
+  const completedDate = new Date(results.completed_at).toLocaleDateString();
+  const totalQuestions = Object.keys(results.answers).length;
 
   return (
     <div className="min-h-screen p-8">
@@ -53,12 +137,18 @@ export default function ResultsPage() {
                   评估结果
                 </h2>
                 <p className="text-gray-600">
-                  Completed on: {new Date().toLocaleDateString()} / 完成时间
+                  Completed on: {completedDate} / 完成时间
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {totalQuestions} questions answered / 已回答 {totalQuestions} 题
                 </p>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              <button
+                onClick={() => window.print()}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
                 <Download className="w-4 h-4" />
-                Export / 导出
+                Print / 打印
               </button>
             </div>
           </div>
@@ -82,6 +172,16 @@ export default function ResultsPage() {
               <p className="text-sm mb-2">行为行动平均分</p>
               <p className="text-4xl font-bold">{doingAverage}</p>
               <p className="text-sm mt-2">out of 5.0</p>
+            </div>
+          </div>
+
+          {/* Info Banner */}
+          <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-900">
+              <p className="font-semibold mb-1">About this assessment / 关于此评估</p>
+              <p>Questions were presented in random order. Scores are calculated based on the 10 spiritual growth categories below.</p>
+              <p className="mt-1">题目以随机顺序呈现。分数根据以下10个属灵成长类别计算。</p>
             </div>
           </div>
 
@@ -144,12 +244,13 @@ export default function ResultsPage() {
           <div>
             <h3 className="text-2xl font-bold mb-4">Detailed Scores / 详细分数</h3>
             <div className="space-y-4">
-              {sampleResults.map((result, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4">
+              {sectionResults.map((result) => (
+                <div key={result.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-center mb-2">
                     <div>
                       <h4 className="font-semibold text-lg">{result.name}</h4>
                       <p className="text-sm text-gray-600">{result.nameChinese}</p>
+                      <p className="text-xs text-gray-500 mt-1">{result.fullName_en}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-blue-600">
@@ -180,6 +281,17 @@ export default function ResultsPage() {
               <li>Retake the assessment in 3-6 months to track progress</li>
               <li>3-6个月后重新评估以追踪进展</li>
             </ul>
+          </div>
+
+          {/* Retake Button */}
+          <div className="mt-8 text-center">
+            <Link
+              href="/assessment"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+              onClick={() => sessionStorage.removeItem('assessmentResults')}
+            >
+              Take Assessment Again / 重新评估
+            </Link>
           </div>
         </div>
       </div>
