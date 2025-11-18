@@ -119,66 +119,67 @@ export default function ResultsPage() {
   const totalQuestions = Object.keys(results.answers).length;
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-8">
           {/* Header */}
-          <div className="mb-8">
-            <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2 mb-4">
-              <ArrowLeft className="w-4 h-4" />
+          <div className="mb-4 sm:mb-8">
+            <Link href="/dashboard" className="text-blue-600 hover:text-blue-700 flex items-center gap-2 mb-3 sm:mb-4 text-sm sm:text-base">
+              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Back to Dashboard / 返回控制面板</span>
             </Link>
-            <div className="flex justify-between items-start">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0">
               <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
                   Assessment Results
                 </h1>
-                <h2 className="text-2xl text-gray-700 mb-4">
+                <h2 className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-2 sm:mb-4">
                   评估结果
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   Completed on: {completedDate} / 完成时间
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-xs sm:text-sm text-gray-500 mt-1">
                   {totalQuestions} questions answered / 已回答 {totalQuestions} 题
                 </p>
               </div>
               <button
                 onClick={() => window.print()}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                className="flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
               >
-                <Download className="w-4 h-4" />
-                Print / 打印
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Print / 打印</span>
+                <span className="sm:hidden">打印</span>
               </button>
             </div>
           </div>
 
           {/* Overall Summary */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-6 rounded-xl">
-              <h3 className="text-lg font-semibold mb-2">Overall Average</h3>
-              <p className="text-sm mb-2">总体平均分</p>
-              <p className="text-4xl font-bold">{overallAverage}</p>
-              <p className="text-sm mt-2">out of 5.0</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-8">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-4 sm:p-5 md:p-6 rounded-xl">
+              <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">Overall Average</h3>
+              <p className="text-xs sm:text-sm mb-1 sm:mb-2">总体平均分</p>
+              <p className="text-3xl sm:text-4xl font-bold">{overallAverage}</p>
+              <p className="text-xs sm:text-sm mt-1 sm:mt-2">out of 5.0</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-green-700 text-white p-6 rounded-xl">
-              <h3 className="text-lg font-semibold mb-2">Being Average</h3>
-              <p className="text-sm mb-2">生命状态平均分</p>
-              <p className="text-4xl font-bold">{beingAverage}</p>
-              <p className="text-sm mt-2">out of 5.0</p>
+            <div className="bg-gradient-to-br from-green-500 to-green-700 text-white p-4 sm:p-5 md:p-6 rounded-xl">
+              <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">Being Average</h3>
+              <p className="text-xs sm:text-sm mb-1 sm:mb-2">生命状态平均分</p>
+              <p className="text-3xl sm:text-4xl font-bold">{beingAverage}</p>
+              <p className="text-xs sm:text-sm mt-1 sm:mt-2">out of 5.0</p>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-purple-700 text-white p-6 rounded-xl">
-              <h3 className="text-lg font-semibold mb-2">Doing Average</h3>
-              <p className="text-sm mb-2">行为行动平均分</p>
-              <p className="text-4xl font-bold">{doingAverage}</p>
-              <p className="text-sm mt-2">out of 5.0</p>
+            <div className="bg-gradient-to-br from-purple-500 to-purple-700 text-white p-4 sm:p-5 md:p-6 rounded-xl">
+              <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2">Doing Average</h3>
+              <p className="text-xs sm:text-sm mb-1 sm:mb-2">行为行动平均分</p>
+              <p className="text-3xl sm:text-4xl font-bold">{doingAverage}</p>
+              <p className="text-xs sm:text-sm mt-1 sm:mt-2">out of 5.0</p>
             </div>
           </div>
 
           {/* Info Banner */}
-          <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-            <div className="text-sm text-blue-900">
+          <div className="mb-4 sm:mb-8 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-2 sm:gap-3">
+            <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm text-blue-900">
               <p className="font-semibold mb-1">About this assessment / 关于此评估</p>
               <p>Questions were presented in random order. Scores are calculated based on the 10 spiritual growth categories below.</p>
               <p className="mt-1">题目以随机顺序呈现。分数根据以下10个属灵成长类别计算。</p>
@@ -186,10 +187,10 @@ export default function ResultsPage() {
           </div>
 
           {/* Radar Chart */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-4">Overall Profile / 整体概况</h3>
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <ResponsiveContainer width="100%" height={400}>
+          <div className="mb-4 sm:mb-8">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Overall Profile / 整体概况</h3>
+            <div className="bg-gray-50 p-3 sm:p-4 md:p-6 rounded-xl">
+              <ResponsiveContainer width="100%" height={300} className="sm:!h-[400px]">
                 <RadarChart data={radarData}>
                   <PolarGrid />
                   <PolarAngleAxis dataKey="area" />
@@ -207,10 +208,10 @@ export default function ResultsPage() {
           </div>
 
           {/* Bar Chart - Being */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-4">Being Behaviors / 生命状态行为</h3>
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <ResponsiveContainer width="100%" height={300}>
+          <div className="mb-4 sm:mb-8">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Being Behaviors / 生命状态行为</h3>
+            <div className="bg-gray-50 p-3 sm:p-4 md:p-6 rounded-xl">
+              <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
                 <BarChart data={beingScores}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -224,10 +225,10 @@ export default function ResultsPage() {
           </div>
 
           {/* Bar Chart - Doing */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-4">Doing Behaviors / 行为行动行为</h3>
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <ResponsiveContainer width="100%" height={300}>
+          <div className="mb-4 sm:mb-8">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Doing Behaviors / 行为行动行为</h3>
+            <div className="bg-gray-50 p-3 sm:p-4 md:p-6 rounded-xl">
+              <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
                 <BarChart data={doingScores}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -242,10 +243,10 @@ export default function ResultsPage() {
 
           {/* Detailed Scores */}
           <div>
-            <h3 className="text-2xl font-bold mb-4">Detailed Scores / 详细分数</h3>
-            <div className="space-y-4">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Detailed Scores / 详细分数</h3>
+            <div className="space-y-3 sm:space-y-4">
               {sectionResults.map((result) => (
-                <div key={result.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={result.id} className="border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-center mb-2">
                     <div>
                       <h4 className="font-semibold text-lg">{result.name}</h4>
@@ -271,9 +272,9 @@ export default function ResultsPage() {
           </div>
 
           {/* Next Steps */}
-          <div className="mt-8 p-6 bg-blue-50 border-l-4 border-blue-600 rounded-lg">
-            <h3 className="font-semibold text-lg mb-2">Next Steps / 下一步</h3>
-            <ul className="list-disc list-inside space-y-2 text-gray-700">
+          <div className="mt-4 sm:mt-8 p-4 sm:p-6 bg-blue-50 border-l-4 border-blue-600 rounded-lg">
+            <h3 className="font-semibold text-base sm:text-lg mb-2">Next Steps / 下一步</h3>
+            <ul className="list-disc list-inside space-y-1 sm:space-y-2 text-sm sm:text-base text-gray-700">
               <li>Review areas with lower scores and consider growth opportunities</li>
               <li>查看得分较低的领域,思考成长机会</li>
               <li>Discuss results with a mentor or spiritual director</li>
@@ -284,10 +285,10 @@ export default function ResultsPage() {
           </div>
 
           {/* Retake Button */}
-          <div className="mt-8 text-center">
+          <div className="mt-4 sm:mt-8 text-center">
             <Link
               href="/assessment"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+              className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors text-sm sm:text-base"
               onClick={() => sessionStorage.removeItem('assessmentResults')}
             >
               Take Assessment Again / 重新评估
