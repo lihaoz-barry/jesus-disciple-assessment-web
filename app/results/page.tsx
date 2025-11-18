@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { ArrowLeft, Download, AlertCircle } from 'lucide-react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import assessmentData from '@/data/jesus-disciple-assess.json';
+import { useAuth } from '@/contexts/AuthContext';
+import { getLatestAssessment } from '@/lib/database';
 
 interface AssessmentResults {
   answers: Record<string, number>;
@@ -15,24 +17,47 @@ interface AssessmentResults {
 
 export default function ResultsPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [results, setResults] = useState<AssessmentResults | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load results from sessionStorage
-    const storedResults = sessionStorage.getItem('assessmentResults');
+    async function loadResults() {
+      // First, try to load from sessionStorage (just submitted)
+      const storedResults = sessionStorage.getItem('assessmentResults');
 
-    if (storedResults) {
-      try {
-        const parsedResults = JSON.parse(storedResults);
-        setResults(parsedResults);
-      } catch (error) {
-        console.error('Failed to parse results:', error);
+      if (storedResults) {
+        try {
+          const parsedResults = JSON.parse(storedResults);
+          setResults(parsedResults);
+          setLoading(false);
+          return;
+        } catch (error) {
+          console.error('Failed to parse sessionStorage results:', error);
+        }
       }
+
+      // If no sessionStorage, try to load latest from database
+      if (user) {
+        try {
+          const latestAssessment = await getLatestAssessment(user.id);
+          if (latestAssessment) {
+            setResults({
+              answers: latestAssessment.answers,
+              scores: latestAssessment.scores || {},
+              completed_at: latestAssessment.completed_at
+            });
+          }
+        } catch (error) {
+          console.error('Failed to load from database:', error);
+        }
+      }
+
+      setLoading(false);
     }
 
-    setLoading(false);
-  }, []);
+    loadResults();
+  }, [user]);
 
   // If no results, redirect to assessment
   useEffect(() => {

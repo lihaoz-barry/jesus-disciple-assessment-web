@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
 import assessmentData from '@/data/jesus-disciple-assess.json';
+import { useAuth } from '@/contexts/AuthContext';
+import { saveAssessmentResult } from '@/lib/database';
 
 // Interface for flattened question with category metadata
 interface FlattenedQuestion {
@@ -19,6 +21,7 @@ interface FlattenedQuestion {
 
 export default function AssessmentPage() {
   const router = useRouter();
+  const { user } = useAuth();
 
   // Flatten and randomize questions on component mount
   const randomizedQuestions = useMemo(() => {
@@ -78,7 +81,7 @@ export default function AssessmentPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const answeredQuestions = Object.keys(answers).length;
 
     if (answeredQuestions < totalQuestions) {
@@ -109,18 +112,38 @@ export default function AssessmentPage() {
       scores[sectionId] = count > 0 ? total / count : 0;
     });
 
-    console.log('Assessment Results:', {
-      answers,
-      scores,
-      sectionScores
-    });
-
-    // Store results in sessionStorage to pass to results page
-    sessionStorage.setItem('assessmentResults', JSON.stringify({
+    const resultsData = {
       answers,
       scores,
       completed_at: new Date().toISOString()
-    }));
+    };
+
+    // Save to Supabase if user is logged in
+    if (user) {
+      try {
+        const result = await saveAssessmentResult(user.id, answers, scores);
+        if (result.success) {
+          console.log('Assessment saved to database:', result.id);
+          // Store the database ID in sessionStorage for results page
+          sessionStorage.setItem('assessmentResults', JSON.stringify({
+            ...resultsData,
+            id: result.id
+          }));
+        } else {
+          console.error('Failed to save to database:', result.error);
+          // Still save to sessionStorage as backup
+          sessionStorage.setItem('assessmentResults', JSON.stringify(resultsData));
+        }
+      } catch (error) {
+        console.error('Error saving assessment:', error);
+        // Fallback to sessionStorage
+        sessionStorage.setItem('assessmentResults', JSON.stringify(resultsData));
+      }
+    } else {
+      // User not logged in, only save to sessionStorage
+      console.warn('User not logged in, saving only to sessionStorage');
+      sessionStorage.setItem('assessmentResults', JSON.stringify(resultsData));
+    }
 
     router.push('/results');
   };

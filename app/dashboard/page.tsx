@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ClipboardList, BarChart3, User, LogOut, Loader2 } from 'lucide-react';
+import { ClipboardList, BarChart3, User, LogOut, Loader2, History } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getUserStats, UserStats } from '@/lib/database';
 
@@ -71,7 +71,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Assessment - Active */}
             <Link
               href="/assessment"
@@ -95,6 +95,19 @@ export default function DashboardPage() {
               <p className="text-green-100 mb-2">查看结果</p>
               <p className="text-sm text-green-100">
                 See your assessment results and charts
+              </p>
+            </Link>
+
+            {/* History - Active */}
+            <Link
+              href="/history"
+              className="bg-gradient-to-br from-amber-500 to-amber-700 text-white p-8 rounded-xl hover:shadow-xl transition-all transform hover:-translate-y-1"
+            >
+              <History className="w-12 h-12 mb-4" />
+              <h3 className="text-2xl font-bold mb-2">History</h3>
+              <p className="text-amber-100 mb-2">历史记录</p>
+              <p className="text-sm text-amber-100">
+                View and compare past assessments
               </p>
             </Link>
 
