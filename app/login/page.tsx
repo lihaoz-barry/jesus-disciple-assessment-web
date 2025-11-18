@@ -28,6 +28,20 @@ export default function LoginPage() {
     }
   };
 
+  const handleTestLogin = async () => {
+    setLoading(true);
+    setError('');
+
+    const result = await signIn('test@abc.com', 'test12345');
+
+    if (result.success) {
+      router.push('/dashboard');
+    } else {
+      setError(result.error || 'Test login failed. Please try again.');
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
@@ -94,6 +108,35 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Demo / 演示</span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleTestLogin}
+            disabled={loading}
+            className="mt-4 w-full bg-amber-500 hover:bg-amber-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Logging in... / 登录中...</span>
+              </>
+            ) : (
+              <span>🎭 Demo Login / 演示登录</span>
+            )}
+          </button>
+          <p className="mt-2 text-xs text-center text-gray-500">
+            For customer preview only / 仅供客户预览
+          </p>
+        </div>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
